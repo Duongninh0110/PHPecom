@@ -1,3 +1,9 @@
+<?php 
+include ('includes/db.php');
+include ('functions/functions.php');
+ ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,18 +36,43 @@
                     <li data-target="#myCarousel" data-slide-to="3"></li>
                 </ol><!-- carousel-indicators end -->
                 <div class="carousel-inner"><!-- carousel-inner start -->
-                    <div class="item active">
-                        <img src="admin_area/slides_images/1.jpg">
-                    </div>
-                    <div class="item">
-                        <img src="admin_area/slides_images/2.jpg">
-                    </div>
-                    <div class="item">
-                        <img src="admin_area/slides_images/3.jpg">
-                    </div>
-                    <div class="item">
-                        <img src="admin_area/slides_images/4.jpg">
-                    </div>
+                    <?php 
+                        $get_slides = "select * from slider limit 0,1";
+                        $run_slides = mysqli_query($con, $get_slides);
+                        while($row_slides = mysqli_fetch_array($run_slides)){
+                            $slide_name = $row_slides['slide_name'];
+                            $slide_image = $row_slides['slide_image'];
+                            echo "
+                                <div class='item active'>
+                                    <img src='admin_area/slides_images/$slide_image'>
+                                </div>
+
+                            ";
+                        }
+
+                     ?>
+
+                     <?php 
+                        $get_slides = "select * from slider limit 1,3";
+                        $run_slides = mysqli_query($con, $get_slides);
+                        while($row_slides = mysqli_fetch_array($run_slides)){
+                            $slide_name = $row_slides['slide_name'];
+                            $slide_image = $row_slides['slide_image'];
+                            echo "
+                                <div class='item'>
+                                    <img src='admin_area/slides_images/$slide_image'>
+                                </div>
+
+                            ";
+                        }
+
+                     ?>
+
+
+
+
+                    
+                    
 
                 </div><!-- carousel-inner end -->
 
@@ -116,100 +147,9 @@
 
     <div id="content" class="container"> <!-- container start -->
         <div class="row">
-            <div class="col-sm-4 col-sm-6 single"><!-- col-sm-4 col-sm-6 single start -->
-                <div class="product"><!-- product start -->
-                    <a href="details.php">
-                        <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                    </a>
-                    <div class="text"><!-- text start -->
-                        <h3><a href="details.php">Marvel Black Kids Polo T-Shirt</a></h3>
-                        <p class="price">$50</p>
-                        <p class="buttons">
-                            <a href="details.php" class="btn btn-default">View Details</a>
-                            <a href="details.php" class="btn btn-primary">
-                                <i class="fa fa-shopping-cart"> Add to cart</i>
-                            </a>
-                        </p>
-                    </div>
-                </div><!-- product end -->
-                
-            </div><!-- col-sm-4 col-sm-6 single end -->
-
-            <div class="col-sm-4 col-sm-6 single"><!-- col-sm-4 col-sm-6 single start -->
-                <div class="product"><!-- product start -->
-                    <a href="details.php">
-                        <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                    </a>
-                    <div class="text"><!-- text start -->
-                        <h3><a href="details.php">Marvel Black Kids Polo T-Shirt</a></h3>
-                        <p class="price">$50</p>
-                        <p class="buttons">
-                            <a href="details.php" class="btn btn-default">View Details</a>
-                            <a href="details.php" class="btn btn-primary">
-                                <i class="fa fa-shopping-cart"> Add to cart</i>
-                            </a>
-                        </p>
-                    </div>
-                </div><!-- product end -->
-                
-            </div><!-- col-sm-4 col-sm-6 single end -->
-
-            <div class="col-sm-4 col-sm-6 single"><!-- col-sm-4 col-sm-6 single start -->
-                <div class="product"><!-- product start -->
-                    <a href="details.php">
-                        <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                    </a>
-                    <div class="text"><!-- text start -->
-                        <h3><a href="details.php">Marvel Black Kids Polo T-Shirt</a></h3>
-                        <p class="price">$50</p>
-                        <p class="buttons">
-                            <a href="details.php" class="btn btn-default">View Details</a>
-                            <a href="details.php" class="btn btn-primary">
-                                <i class="fa fa-shopping-cart"> Add to cart</i>
-                            </a>
-                        </p>
-                    </div>
-                </div><!-- product end -->
-                
-            </div><!-- col-sm-4 col-sm-6 single end -->
-
-            <div class="col-sm-4 col-sm-6 single"><!-- col-sm-4 col-sm-6 single start -->
-                <div class="product"><!-- product start -->
-                    <a href="details.php">
-                        <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                    </a>
-                    <div class="text"><!-- text start -->
-                        <h3><a href="details.php">Marvel Black Kids Polo T-Shirt</a></h3>
-                        <p class="price">$50</p>
-                        <p class="buttons">
-                            <a href="details.php" class="btn btn-default">View Details</a>
-                            <a href="details.php" class="btn btn-primary">
-                                <i class="fa fa-shopping-cart"> Add to cart</i>
-                            </a>
-                        </p>
-                    </div>
-                </div><!-- product end -->
-                
-            </div><!-- col-sm-4 col-sm-6 single end -->
-
-            <div class="col-sm-4 col-sm-6 single"><!-- col-sm-4 col-sm-6 single start -->
-                <div class="product"><!-- product start -->
-                    <a href="details.php">
-                        <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                    </a>
-                    <div class="text"><!-- text start -->
-                        <h3><a href="details.php">Marvel Black Kids Polo T-Shirt</a></h3>
-                        <p class="price">$50</p>
-                        <p class="buttons">
-                            <a href="details.php" class="btn btn-default">View Details</a>
-                            <a href="details.php" class="btn btn-primary">
-                                <i class="fa fa-shopping-cart"> Add to cart</i>
-                            </a>
-                        </p>
-                    </div>
-                </div><!-- product end -->
-                
-            </div><!-- col-sm-4 col-sm-6 single end -->
+            <?php 
+                getPro ();
+             ?>
 
             
         </div><!-- row end -->

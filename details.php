@@ -1,3 +1,32 @@
+<?php 
+include ('includes/db.php');
+include ('functions/functions.php');
+ ?>
+
+<?php 
+if(isset($_GET['pro_id'])){
+    $product_id = $_GET['pro_id'];
+    $get_product = "select * from products where product_id = $product_id";
+    $run_product = mysqli_query($con, $get_product);
+    $row_product = mysqli_fetch_array($run_product);
+    $p_cat_id = $row_product['p_cat_id'];
+    $cat_id = $row_product['cat_id'];
+    $product_title = $row_product['product_title'];
+    $product_img1 = $row_product['product_img1'];
+    $product_img2 = $row_product['product_img2'];
+    $product_img3 = $row_product['product_img3'];
+    $product_price = $row_product['product_price'];
+    $product_desc = $row_product['product_desc'];
+    $product_keywords = $row_product['product_keywords'];
+    $get_p_cat = "select * from product_categories where p_cat_id = $p_cat_id";
+    $run_p_cat = mysqli_query($con, $get_p_cat);
+    $row_p_cat = mysqli_fetch_array($run_p_cat);
+    $p_cat_title = $row_p_cat['p_cat_title'];
+}
+
+
+ ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +52,8 @@
                  <div class="breadcrumb"><!-- breadcrumb start -->
                      <li><a href="index.php">Index</a></li>
                      <li><a href="shop.php">Shop</a></li>
+                     <li><a href="shop.php?p_cat=<?php echo "$p_cat_id"; ?>"><?php echo "$p_cat_title"; ?></a></li>
+                     <li><?php echo "$product_title"; ?></li>
                  </div><!-- breadcrumb end -->
              </div><!-- col-md-12 end -->
 
@@ -44,17 +75,17 @@
                                  <div class="carousel-inner"><!-- carousel-inner start -->
                                      <div class="item active">
                                         <center>
-                                            <img src="admin_area/product_images/product.jpg">
+                                            <img src="admin_area/product_images/<?php echo "$product_img1"; ?>">
                                         </center>
                                      </div>
                                      <div class="item">
                                         <center>
-                                            <img src="admin_area/product_images/product2.jpg">
+                                            <img src="admin_area/product_images/<?php echo "$product_img2"; ?>">
                                         </center>
                                      </div>
                                      <div class="item">
                                         <center>
-                                            <img src="admin_area/product_images/product3.jpg">
+                                            <img src="admin_area/product_images/<?php echo "$product_img3"; ?>">
                                         </center>
                                      </div>
 
@@ -75,8 +106,9 @@
 
                      <div class="col-md-6"><!-- col-md-6 start -->
                          <div class="box"><!-- box start -->
-                             <h1 class="text-center">Marvel Black Kids Polo T-Shirt</h1>
-                             <form action="details.php" method="post" class="form-horizontal"><!-- form-horizontal start -->
+                             <h1 class="text-center"><?php echo "$product_title"; ?></h1>
+                             <?php add_cart(); ?>
+                             <form action="index.php?add_cart=<?php echo"$product_id"; ?>" method="post" class="form-horizontal"><!-- form-horizontal start -->
                                 <div class="form-group"><!-- form-group start -->
                                     <label class="col-md -5 control-label">Product Quantity</label>
                                     <div class="col-md-7"><!-- col-md-7 start -->
@@ -101,7 +133,7 @@
                                         </select>
                                     </div><!-- col-md-7 end -->
                                 </div><!-- form-group end -->
-                                <p class="price">$50</p>
+                                <p class="price">$<?php echo "$product_price"; ?></p>
                                 <p class="text-center buttons"><!-- text-center buttons start -->
                                     <button class="btn btn-primary" type="submit">
                                         <i class="fa fa-shopping-cart"> Add to cart</i>
@@ -114,19 +146,19 @@
                          <div id="thumbs" class="row"><!-- row start -->
                              <div class="col-xs-4"><!-- col-xs-4 start -->
                                  <a href="#" class="thumb">
-                                     <img src="admin_area/product_images/product.jpg" class="img-responsive">
+                                     <img src="admin_area/product_images/<?php echo "$product_img1"; ?>" class="img-responsive">
                                  </a>
                              </div><!-- col-xs-4 end -->
 
                              <div class="col-xs-4"><!-- col-xs-4 start -->
                                  <a href="#" class="thumb">
-                                     <img src="admin_area/product_images/product2.jpg" class="img-responsive">
+                                     <img src="admin_area/product_images/<?php echo "$product_img2"; ?>" class="img-responsive">
                                  </a>
                              </div><!-- col-xs-4 end -->
 
                              <div class="col-xs-4"><!-- col-xs-4 start -->
                                  <a href="#" class="thumb">
-                                     <img src="admin_area/product_images/product3.jpg" class="img-responsive">
+                                     <img src="admin_area/product_images/<?php echo "$product_img3"; ?>" class="img-responsive">
                                  </a>
                              </div><!-- col-xs-4 end -->
                          </div><!-- row end -->
@@ -137,7 +169,7 @@
                      <p>
                          <h4>Product Details</h4>
                          <p>
-                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                             <?php echo "$product_desc"; ?>
                          </p>
                          <h4>Size</h4>
                          <ul>
@@ -158,53 +190,38 @@
                          </div><!-- box same-height headline end -->
                      </div><!-- col-md-3 col-sm-6 end -->
 
-                     <div class="center-responsive col-md-3 col-sm-6"><!-- center-responsive col-md-3 col-sm-6 start -->
-                         <div class="product same-height"><!-- product same-height start -->
-                             <a href="details.php">
-                                 <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                             </a>
+                     <?php 
 
-                             <div class="text"><!-- text start -->
-                                 <h3>
-                                     <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                 </h3>
+                            $get_products = "select* from products order by rand() limit 0,3";
+                            $run_products = mysqli_query($con, $get_products);
+                            while ($row_products = mysqli_fetch_array($run_products)) {
+                                $product_id = $row_products['product_id'];
+                                $product_title = $row_products['product_title'];
+                                $product_price = $row_products['product_price'];
+                                $product_img1 = $row_products['product_img1'];
 
-                                 <p class="price">$50</p>
-                             </div><!-- text end -->
-                         </div><!-- product same-height end -->
-                     </div><!-- center-responsive col-md-3 col-sm-6 end -->
+                                echo "
+                                    <div class='center-responsive col-md-3 col-sm-6'><!-- center-responsive col-md-3 col-sm-6 start -->
+                                        <div class='product same-height'><!-- product same-height start -->
+                                            <a href='details.php?pro_id=$product_id'>
+                                                <img src='admin_area/product_images/$product_img1' class='img-responsive'>
+                                            </a>
 
-                     <div class="center-responsive col-md-3 col-sm-6"><!-- center-responsive col-md-3 col-sm-6 start -->
-                         <div class="product same-height"><!-- product same-height start -->
-                             <a href="details.php">
-                                 <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                             </a>
+                                            <div class='text'><!-- text start -->
+                                                <h3>
+                                                    <a href='details.php?pro_id=$product_id'>$product_title</a>
+                                                </h3>
 
-                             <div class="text"><!-- text start -->
-                                 <h3>
-                                     <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                 </h3>
+                                                <p class='price'>$$product_price</p>
+                                            </div><!-- text end -->
+                                        </div><!-- product same-height end -->
+                                    </div><!-- center-responsive col-md-3 col-sm-6 end -->
 
-                                 <p class="price">$50</p>
-                             </div><!-- text end -->
-                         </div><!-- product same-height end -->
-                     </div><!-- center-responsive col-md-3 col-sm-6 end -->
+                                ";
+                            }
+                      ?>
 
-                     <div class="center-responsive col-md-3 col-sm-6"><!-- center-responsive col-md-3 col-sm-6 start -->
-                         <div class="product same-height"><!-- product same-height start -->
-                             <a href="details.php">
-                                 <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                             </a>
-
-                             <div class="text"><!-- text start -->
-                                 <h3>
-                                     <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                 </h3>
-
-                                 <p class="price">$50</p>
-                             </div><!-- text end -->
-                         </div><!-- product same-height end -->
-                     </div><!-- center-responsive col-md-3 col-sm-6 end -->
+                     
                      
                  </div><!-- row same-height-row end -->
              </div><!-- col-md-9 start -->

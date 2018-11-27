@@ -1,3 +1,9 @@
+<?php 
+include ('includes/db.php');
+include ('functions/functions.php');
+ ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,179 +37,101 @@
              </div><!-- col-md-3 end -->
 
              <div class="col-md-9"><!-- col-md-9 start -->
-                 <div class="box">
-                     <h1>Shop</h1>
-                     <p>
-                         it is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, 
-                     </p>
-                 </div>
+                 
+                    <?php 
+                        if(!isset($_GET['p_cat'])){
+                            if(!isset($_GET['cat'])){
+                                echo"
+                                <div class='box'>
+                                    <h1>Shop</h1>
+                                    <p>
+                                        it is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, 
+                                    </p>
+                                </div>
+                                ";
+                            }
+                        }
+                     ?>
+                 
                  <div class="row"> <!-- row start -->
-                     <div class="col-md-4 col-sm-6 center-responsive"><!-- col-md-4 col-sm-6 center-responsive start -->
-                        <div class="product"><!-- product start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
 
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
+                    <?php 
+                        if(!isset($_GET['p_cat'])){
+                            if(!isset($_GET['cat'])){
+                                $per_page = 6;
+                                if(isset($_GET['page'])){
+                                    $page = $_GET['page'];
+                                } else {
+                                    $page = 1;
+                                }
+                                $start_from = ($page-1)*$per_page;
+                                $get_products = "select * from products order by 1 desc limit $start_from,$per_page";
+                                $run_products = mysqli_query($con, $get_products);
+                                while($row_products = mysqli_fetch_array($run_products)){
+                                    $product_id = $row_products['product_id'];
+                                    $product_title = $row_products['product_title'];
+                                    $product_price = $row_products['product_price'];
+                                    $product_img1 = $row_products['product_img1'];
 
-                                <p class="price">$50</p>
-                                <p class="buttons">
-                                    <a href="details.php" class="btn btn-default"> View Details</a>
-                                    <a href="details.php" class="btn btn-primary">
-                                        <i class="fa fa-shopping-cart"> Add to cart</i>
-                                    </a>
-                                </p>
-                            </div><!-- text end -->
-                        </div><!--   -->
-                     </div><!-- col-md-4 col-sm-6 center-responsive end -->
+                                    echo "
+                                        <div class='col-md-4 col-sm-6 center-responsive'><!-- col-md-4 col-sm-6 center-responsive start -->
+                                           <div class='product'><!-- product start -->
+                                               <a href='details.php?pro_id=$product_id'>
+                                                   <img src='admin_area/product_images/$product_img1' class='img-responsive'>
+                                               </a>
 
-                     <div class="col-md-4 col-sm-6 center-responsive"><!-- col-md-4 col-sm-6 center-responsive start -->
-                        <div class="product"><!-- product start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
+                                               <div class='text'><!-- text start -->
+                                                   <h3>
+                                                       <a href='details.php?pro_id=$product_id'>$product_title</a>
+                                                   </h3>
 
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
+                                                   <p class='price'>$$product_price</p>
+                                                   <p class='buttons'>
+                                                       <a href='details.php?pro_id=$product_id' class='btn btn-default'> View Details</a>
+                                                       <a href='details.php?pro_id=$product_id' class='btn btn-primary'>
+                                                           <i class='fa fa-shopping-cart'> Add to cart</i>
+                                                       </a>
+                                                   </p>
+                                               </div><!-- text end -->
+                                           </div><!--   -->
+                                        </div><!-- col-md-4 col-sm-6 center-responsive end -->
 
-                                <p class="price">$50</p>
-                                <p class="buttons">
-                                    <a href="details.php" class="btn btn-default"> View Details</a>
-                                    <a href="details.php" class="btn btn-primary">
-                                        <i class="fa fa-shopping-cart"> Add to cart</i>
-                                    </a>
-                                </p>
-                            </div><!-- text end -->
-                        </div><!--   -->
-                     </div><!-- col-md-4 col-sm-6 center-responsive end -->
+                                    ";
+                                }
+                    ?>
 
-                     <div class="col-md-4 col-sm-6 center-responsive"><!-- col-md-4 col-sm-6 center-responsive start -->
-                        <div class="product"><!-- product start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
+                    </div><!-- row end -->
 
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
+                    <center> <!-- center start -->
+                        <ul class="pagination"><!-- pagination start -->
+                           <?php 
+                           
+                                   $query = "SELECT * FROM products";
+                                   $result = mysqli_query($con, $query);
+                                   $total_record = mysqli_num_rows($result);
+                                   $total_pages = ceil($total_record/$per_page);
+                                   echo "
+                                       <li><a href='shop.php?page=1'>First Page</a></li>
+                                   ";
 
-                                <p class="price">$50</p>
-                                <p class="buttons">
-                                    <a href="details.php" class="btn btn-default"> View Details</a>
-                                    <a href="details.php" class="btn btn-primary">
-                                        <i class="fa fa-shopping-cart"> Add to cart</i>
-                                    </a>
-                                </p>
-                            </div><!-- text end -->
-                        </div><!--   -->
-                     </div><!-- col-md-4 col-sm-6 center-responsive end -->
+                                   for($i=1; $i<=$total_pages; $i++){
+                                       echo "
+                                           <li><a href='shop.php?page=$i'>$i</a></li>
+                                       ";
+                                   }
 
-                     <div class="col-md-4 col-sm-6 center-responsive"><!-- col-md-4 col-sm-6 center-responsive start -->
-                        <div class="product"><!-- product start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
-
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
-
-                                <p class="price">$50</p>
-                                <p class="buttons">
-                                    <a href="details.php" class="btn btn-default"> View Details</a>
-                                    <a href="details.php" class="btn btn-primary">
-                                        <i class="fa fa-shopping-cart"> Add to cart</i>
-                                    </a>
-                                </p>
-                            </div><!-- text end -->
-                        </div><!--   -->
-                     </div><!-- col-md-4 col-sm-6 center-responsive end -->
-
-                     <div class="col-md-4 col-sm-6 center-responsive"><!-- col-md-4 col-sm-6 center-responsive start -->
-                        <div class="product"><!-- product start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
-
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
-
-                                <p class="price">$50</p>
-                                <p class="buttons">
-                                    <a href="details.php" class="btn btn-default"> View Details</a>
-                                    <a href="details.php" class="btn btn-primary">
-                                        <i class="fa fa-shopping-cart"> Add to cart</i>
-                                    </a>
-                                </p>
-                            </div><!-- text end -->
-                        </div><!--   -->
-                     </div><!-- col-md-4 col-sm-6 center-responsive end -->
-
-                     <div class="col-md-4 col-sm-6 center-responsive"><!-- col-md-4 col-sm-6 center-responsive start -->
-                        <div class="product"><!-- product start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
-
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
-
-                                <p class="price">$50</p>
-                                <p class="buttons">
-                                    <a href="details.php" class="btn btn-default"> View Details</a>
-                                    <a href="details.php" class="btn btn-primary">
-                                <i class="fa fa-shopping-cart"> Add to cart</i>
-                            </a>
-                                </p>
-                            </div><!-- text end -->
-                        </div><!--   -->
-                     </div><!-- col-md-4 col-sm-6 center-responsive end -->
-
-                     <div class="col-md-4 col-sm-6 center-responsive"><!-- col-md-4 col-sm-6 center-responsive start -->
-                        <div class="product"><!-- product start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
-
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
-
-                                <p class="price">$50</p>
-                                <p class="buttons">
-                                    <a href="details.php" class="btn btn-default"> View Details</a>
-                                    <a href="details.php" class="btn btn-primary">
-                                        <i class="fa fa-shopping-cart"> Add to cart</i>
-                                    </a>
-                                </p>
-                            </div><!-- text end -->
-                        </div><!--   -->
-                     </div><!-- col-md-4 col-sm-6 center-responsive end -->
-                 </div><!-- row end -->
-
-                 <center> <!-- center start -->
-                     <ul class="pagination">
-                         <li><a href="shop.php">First Page</a></li>
-                         <li><a href="shop.php">1</a></li>
-                         <li><a href="shop.php">2</a></li>
-                         <li><a href="shop.php">3</a></li>
-                         <li><a href="shop.php">4</a></li>
-                         <li><a href="shop.php">5</a></li>
-                         <li><a href="shop.php">Last Page</a></li>
-                     </ul>
-                 </center><!-- center end -->
+                                   echo "
+                                       <li><a href='shop.php?page=$total_pages'>Last Page</a></li>
+                                   ";
+                                   }
+                               }
+                            ?>
+                        </ul><!-- pagination end -->
+                    </center><!-- center end -->
+                 <?php 
+                    getPcatPro();
+                    getCatPro();
+                ?>
              </div><!-- col-md-9 end -->
          </div><!-- container end -->
      </div><!-- content end -->
