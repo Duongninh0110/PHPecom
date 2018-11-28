@@ -29,7 +29,7 @@ session_start();
              <div class="col-md-12"><!-- col-md-12 start -->
                  <div class="breadcrumb"><!-- breadcrumb start -->
                      <li><a href="index.php">Index</a></li>
-                     <li><a href="shop.php">My Account</a></li>
+                     <li><a href="shop.php">Register</a></li>
                  </div><!-- breadcrumb end -->
              </div><!-- col-md-12 end -->
 
@@ -38,29 +38,13 @@ session_start();
              </div><!-- col-md-3 end -->
 
              <div class="col-md-9"><!-- col-md-9 start -->
-                 <div class="box"><!-- box start -->
-                     <?php 
-                        if (isset($_GET['my_orders'])) {
-                            include ("my_orders.php");
-                        }
-
-                        if (isset($_GET['pay_offline'])) {
-                            include ("pay_offline.php");
-                        }
-
-                        if (isset($_GET['edit_account'])) {
-                            include ("edit_account.php");
-                        }
-
-                        if (isset($_GET['change_pass'])) {
-                            include ("change_pass.php");
-                        }
-
-                        if (isset($_GET['delete_account'])) {
-                            include ("delete_account.php");
-                        }
-                      ?>
-                 </div><!-- box end -->
+                 <?php 
+                    if(!isset($_SESSION['customer_email'])){
+                        include ("customer/customer_login.php");
+                    } else {
+                        include ("payment_options.php");
+                    }
+                  ?>
              </div><!-- col-md-9 end -->
 
             
@@ -76,3 +60,4 @@ session_start();
 
 </body>
 </html>
+

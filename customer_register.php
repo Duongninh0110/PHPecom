@@ -1,6 +1,7 @@
 <?php 
 include ('includes/db.php');
 include ('functions/functions.php');
+session_start();
  ?>
 
 
@@ -61,22 +62,22 @@ include ('functions/functions.php');
 
                         <div class="form-group">
                             <label>Customer Country</label>
-                            <input type="password" name="c_country" class="form-control">
+                            <input type="text" name="c_country" class="form-control">
                         </div>
 
                         <div class="form-group">
                             <label>Customer City</label>
-                            <input type="password" name="c_city" class="form-control">
+                            <input type="text" name="c_city" class="form-control">
                         </div>
 
                         <div class="form-group">
                             <label>Customer Contact</label>
-                            <input type="password" name="c_contact" class="form-control">
+                            <input type="text" name="c_contact" class="form-control">
                         </div>
 
                         <div class="form-group">
                             <label>Customer Address</label>
-                            <input type="password" name="c_address" class="form-control">
+                            <input type="text" name="c_address" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -85,7 +86,7 @@ include ('functions/functions.php');
                         </div>
 
                         <div class="text-center">
-                            <button class="btn btn-primary" type="submit" name="submit">
+                            <button class="btn btn-primary" type="submit" name="register">
                                 <i class="fa fa-user-md"> Register</i>
                             </button>
                         </div>
@@ -108,3 +109,38 @@ include ('functions/functions.php');
 
 </body>
 </html>
+
+<?php 
+    if(isset($_POST['register'])){
+        $c_name = $_POST['c_name'];
+        $c_email = $_POST['c_email'];
+        $c_pass = $_POST['c_pass'];
+        $c_country = $_POST['c_country'];
+        $c_city = $_POST['c_city'];
+        $c_contact = $_POST['c_contact'];
+        $c_address = $_POST['c_address'];
+        $c_image = $_FILES['c_image']['name'];
+        $c_image_tmp = $_FILES['c_image']['tmp_name'];
+        $c_ip = getRealUserIp();
+
+        move_uploaded_file($c_image_tmp, "customer/customer_images/$c_image");
+        $insert_customer = "insert into customers (customer_name, customer_email, customer_pass, customer_country, customer_city, customer_contact, customer_address, customer_image, customer_ip) values ('$c_name', '$c_email', '$c_pass', '$c_country', '$c_city', '$c_contact', '$c_address', '$c_image', '$c_ip') ";
+
+        $run_customer = mysqli_query($con, $insert_customer);
+        $sel_cart = "select * from cart where ip_add = '$c_ip'";
+        $run_cart = mysqli_query($con, $sel_cart);
+        $check_cart = mysqli_num_rows($run_cart);
+        // echo "<prev>"; print_r($check_cart); die;
+
+        if($check_cart>0){
+            $_SESSION['customer_email'] = $c_email;
+            echo "<script>alert('you have registered successfully')</script>";
+            echo "<script>window.open('checkout.php', '_self')</script>";
+        } else {
+            $_SESSION['customer_email'] = $c_email;
+            echo "<script>alert('you have registered successfully')</script>";
+            echo "<script>window.open('index.php', '_self')</script>";
+        }
+    }
+
+ ?>

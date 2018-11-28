@@ -1,6 +1,7 @@
 <?php 
 include ('includes/db.php');
 include ('functions/functions.php');
+session_start();
  ?>
 
 <?php 
@@ -108,7 +109,7 @@ if(isset($_GET['pro_id'])){
                          <div class="box"><!-- box start -->
                              <h1 class="text-center"><?php echo "$product_title"; ?></h1>
                              <?php add_cart(); ?>
-                             <form action="index.php?add_cart=<?php echo"$product_id"; ?>" method="post" class="form-horizontal"><!-- form-horizontal start -->
+                             <form action="details.php?add_cart=<?php echo"$product_id"; ?>" method="post" class="form-horizontal"><!-- form-horizontal start -->
                                 <div class="form-group"><!-- form-group start -->
                                     <label class="col-md -5 control-label">Product Quantity</label>
                                     <div class="col-md-7"><!-- col-md-7 start -->

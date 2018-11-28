@@ -1,6 +1,7 @@
 <?php 
 include ('includes/db.php');
 include ('functions/functions.php');
+session_start();
  ?>
 
 
@@ -35,7 +36,15 @@ include ('functions/functions.php');
                 <div class="box"><!-- box start -->
                     <form action="cart.php" method="post" enctype="multipart-form-data"><!-- form start -->
                         <h1>Shopping Cart</h1>
-                        <p class="text-muted">You currently have 3 items in your cart</p>
+
+                        <?php
+                        $ip_add = getRealUserIp();
+                        $select_cart = "select * from cart where ip_add = '$ip_add'";
+                        $run_cart = mysqli_query($con, $select_cart);
+                        $count = mysqli_num_rows($run_cart)
+                         ?>
+
+                        <p class="text-muted">You currently have <?php echo $count; ?> items in your cart</p>
                         <div class="table-responsive"><!-- table-responsive start -->
                             <table class="table"> 
                                 <thead> 
@@ -49,24 +58,48 @@ include ('functions/functions.php');
                                     </tr>
                                 </thead> 
                                 <tbody> 
+
+                                    <?php 
+                                        $total = 0;
+                                        while ($row_cart = mysqli_fetch_array($run_cart)) {
+                                            $pro_id = $row_cart['p_id'];
+                                            $pro_size = $row_cart['size'];
+                                            $pro_qty = $row_cart['qty'];
+                                            $get_product = "select * from products where product_id = '$pro_id'";
+                                            $run_product = mysqli_query($con, $get_product);
+                                            $row_product = mysqli_fetch_array($run_product);
+                                            $product_title = $row_product['product_title'];
+                                            $product_img1 = $row_product['product_img1'];
+                                            $product_price = $row_product['product_price'];
+                                            $sub_total = $row_product['product_price']*$pro_qty;
+                                            $total += $sub_total;
+                                    ?>
+
+
+                                      
                                     <tr> 
                                         <td>
-                                            <img src="admin_area/product_images/product.jpg">
+                                            <img src="admin_area/product_images/<?php echo$product_img1; ?>">
                                         </td> 
-                                        <td><a href="#">Marvel Black Kids Polo T-Shirt</a></td> 
-                                        <td>2</td>
-                                        <td>$50.00</td> 
-                                        <td>Large</td> 
+                                        <td><a href="#"><?php echo $product_title; ?></a></td> 
+                                        <td><?php echo $pro_qty; ?></td>
+                                        <td>$<?php echo $product_price; ?>.00</td> 
+                                        <td><?php echo $pro_size; ?></td> 
                                         <td>
-                                            <input type="checkbox" name="remove[]">
+                                            <input type="checkbox" name="remove[]" value="<?php echo $pro_id; ?>">
                                         </td>
-                                        <td>$100.00</td>
-                                    </tr> 
+                                        <td>$<?php echo $sub_total; ?>.00</td>
+                                    </tr>
+
+                                    <?php 
+                                        }
+                                     ?>
+
                                 </tbody> 
                                 <tfoot>
                                     <tr>
                                         <th colspan="5">Total</th>
-                                        <th colspan="2">$100.00</th>
+                                        <th colspan="2">$<?php echo $total; ?>.00</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -91,6 +124,27 @@ include ('functions/functions.php');
                     </form><!-- form end -->
                 </div><!-- box end -->
 
+                <?php 
+
+                function update_cart(){
+                    global $con;
+                    if (isset($_POST['update'])){
+                        foreach ($_POST['remove'] as $remove_id) {
+                            // echo "<prev>"; print_r($remove_id); die;
+                            $delete_product = "delete from cart where p_id = '$remove_id'";
+                            $run_delete = mysqli_query($con, $delete_product);
+                            // echo "<prev>"; print_r($run_delete); die;
+                            if($run_delete){
+                                echo "<script>window.open('cart.php', '_self')</script>";
+                            }
+                        }
+                    }
+                }
+
+                echo @$up_cart = update_cart();
+
+                 ?>
+
                 <div class="row same-height-row"><!-- row same-height-row start -->
                     <div class="col-md-3 col-sm-6"><!-- col-md-3 col-sm-6 start -->
                         <div class="box same-height headline"><!-- box same-height headline start -->
@@ -98,53 +152,36 @@ include ('functions/functions.php');
                         </div><!-- box same-height headline end -->
                     </div><!-- col-md-3 col-sm-6 end -->
 
-                    <div class="center-responsive col-md-3 col-sm-6"><!-- center-responsive col-md-3 col-sm-6 start -->
-                        <div class="product same-height"><!-- product same-height start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
+                    <?php 
 
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
+                           $get_products = "select* from products order by rand() limit 0,3";
+                           $run_products = mysqli_query($con, $get_products);
+                           while ($row_products = mysqli_fetch_array($run_products)) {
+                               $product_id = $row_products['product_id'];
+                               $product_title = $row_products['product_title'];
+                               $product_price = $row_products['product_price'];
+                               $product_img1 = $row_products['product_img1'];
 
-                                <p class="price">$50</p>
-                            </div><!-- text end -->
-                        </div><!-- product same-height end -->
-                    </div><!-- center-responsive col-md-3 col-sm-6 end -->
+                               echo "
+                                   <div class='center-responsive col-md-3 col-sm-6'><!-- center-responsive col-md-3 col-sm-6 start -->
+                                       <div class='product same-height'><!-- product same-height start -->
+                                           <a href='details.php?pro_id=$product_id'>
+                                               <img src='admin_area/product_images/$product_img1' class='img-responsive'>
+                                           </a>
 
-                    <div class="center-responsive col-md-3 col-sm-6"><!-- center-responsive col-md-3 col-sm-6 start -->
-                        <div class="product same-height"><!-- product same-height start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
+                                           <div class='text'><!-- text start -->
+                                               <h3>
+                                                   <a href='details.php?pro_id=$product_id'>$product_title</a>
+                                               </h3>
 
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
+                                               <p class='price'>$$product_price</p>
+                                           </div><!-- text end -->
+                                       </div><!-- product same-height end -->
+                                   </div><!-- center-responsive col-md-3 col-sm-6 end -->
 
-                                <p class="price">$50</p>
-                            </div><!-- text end -->
-                        </div><!-- product same-height end -->
-                    </div><!-- center-responsive col-md-3 col-sm-6 end -->
-
-                    <div class="center-responsive col-md-3 col-sm-6"><!-- center-responsive col-md-3 col-sm-6 start -->
-                        <div class="product same-height"><!-- product same-height start -->
-                            <a href="details.php">
-                                <img src="admin_area/product_images/product.jpg" class="img-responsive">
-                            </a>
-
-                            <div class="text"><!-- text start -->
-                                <h3>
-                                    <a href="details.php">Marvel Black Kids Polo T-Shirt</a>
-                                </h3>
-
-                                <p class="price">$50</p>
-                            </div><!-- text end -->
-                        </div><!-- product same-height end -->
-                    </div><!-- center-responsive col-md-3 col-sm-6 end -->
+                               ";
+                           }
+                     ?>
                     
                 </div><!-- row same-height-row end -->
             </div><!-- col-md-9 end -->
@@ -162,7 +199,7 @@ include ('functions/functions.php');
                             <tbody>
                                 <tr>
                                     <td>Order Subtotal</td>
-                                    <th>$200.00</th>
+                                    <th>$<?php echo $total; ?>.00</th>
                                 </tr>
                                 <tr>
                                     <td>Shipping and handling</td>
@@ -174,7 +211,7 @@ include ('functions/functions.php');
                                 </tr>
                                 <tr class="total">
                                     <td>Total</td>
-                                    <th>$200.00</th>
+                                    <th>$<?php echo $total; ?>.00</th>
                                 </tr>
                             </tbody>
                         </table>

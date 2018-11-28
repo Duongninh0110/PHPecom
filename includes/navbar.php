@@ -22,7 +22,15 @@
                 <ul class="nav navbar-nav navbar-left"><!-- nav navbar-nav navbar-left start -->
                     <li class="active"><a href="index.php">Home</a></li>
                     <li><a href="shop.php">Shop</a></li>
-                    <li><a href="customer/my_account.php">My Account</a></li>
+                    <li>
+                        <?php 
+                            if (!isset($_SESSION['customer_email'])) {
+                                echo "<a href='checkout.php'>My Account</a>";
+                            } else {
+                                echo "<a href='customer/my_account.php?my_orders'>My Account</a>";
+                            }
+                         ?>
+                    </li>
                     <li><a href="cart.php">Shopping Cart</a></li>
                     <li><a href="contact.php">Contact Us</a></li>
                 </ul><!-- nav navbar-nav navbar-left end -->
@@ -30,7 +38,7 @@
 
             <a href="cart.php" class="btn btn-primary navbar-btn right"><!-- btn btn-primary navbar-btn right start -->
                 <i class="fa fa-shopping-cart"></i>
-                <span>4 items in cart</span>
+                <span><?php items() ?> items in cart</span>
             </a><!-- btn btn-primary navbar-btn right end -->
 
             <div class="navbar-collapse collapse right"><!-- navbar-collapse collapse right start -->

@@ -1,6 +1,7 @@
 <?php 
 include ('includes/db.php');
 include ('functions/functions.php');
+session_start();
  ?>
 
 
@@ -75,6 +76,25 @@ include ('functions/functions.php');
                          
 
                      </form> <!-- form end -->
+
+                     <?php 
+                        if(isset($_POST['submit'])){
+                            $sender_name = $_POST['name'];
+                            $sender_email = $_POST['email'];
+                            $sender_subject = $_POST['subject'];
+                            $sender_message = $_POST['message'];
+                            $receiver_email = "duongninh@gmail.com";
+                            mail($receiver_email, $sender_name, $sender_subject, $sender_message, $sender_email);
+                            // send email to sender
+                            $email = $_POST['email'];
+                            $subject = "welcome to my website";
+                            $msg = "I shall get you soon, thanks for sending us email";
+                            $from = "duongninh@gmail.com";
+                            mail($email, $subject, $msg, $from);
+                            echo "<h2 align='center'>Your message has been sent successfully</h2>";
+
+                        }
+                      ?>
                  </div> <!-- box end --> 
              </div><!-- col-md-9 end -->
 
